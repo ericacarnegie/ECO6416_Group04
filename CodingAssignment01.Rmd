@@ -44,10 +44,11 @@ Answer the following questions using complete sentences and attach all output, p
 **For this assignment, ignore the categorical variables (gender, smoker, cities)**
 
 ```{r dataset, include=FALSE}
-insurance_data <- read.csv("~/Downloads/Insurance_Data_Group4.csv")
-
+insurance_data <- read.csv("~/Desktop/ECO Code/Insurance_Data_Group4.csv")
 relevant_data <- insurance_data %>%
   select(Charges, Age, BMI, Children) %>% ungroup()
+
+
 ```
 
 
@@ -57,7 +58,6 @@ relevant_data <- insurance_data %>%
 Perform univariate analyses on the quantitative variables (center, shape, spread). Include descriptive statistics, and histograms. Be sure to use terms discussed in class such as bimodal, skewed left, etc.
 
 ```{r q1}
-
 mean(relevant_data$Charges)
 mean(relevant_data$Age)
 mean(relevant_data$BMI)
@@ -80,6 +80,8 @@ getModes(relevant_data$BMI)
 getModes(relevant_data$Children)
 
 # Shape
+
+
 
 
 # Spread
@@ -124,19 +126,7 @@ hist(relevant_data$Children, breaks = "fd")
 Perform bivariate analyses on the quantitative variables (direction, strength and form). Describe the linear association between all variables. 
 
 ```{r q2}
-cor(relevant_data$Charges, relevant_data$Age)
-cor(relevant_data$Charges, relevant_data$BMI)
-cor(relevant_data$Charges, relevant_data$Children)
-cor(relevant_data$Age, relevant_data$BMI)
-cor(relevant_data$Age, relevant_data$Children)
-cor(relevant_data$BMI, relevant_data$Children)
 
-plot(relevant_data$Charges, relevant_data$Age)
-plot(relevant_data$Charges, relevant_data$BMI)
-plot(relevant_data$Charges, relevant_data$Children)
-plot(relevant_data$Age, relevant_data$BMI)
-plot(relevant_data$Age, relevant_data$Children)
-plot(relevant_data$BMI, relevant_data$Children)
 ```
 
 # Question 3
@@ -145,12 +135,19 @@ Generate a regression equation in the following form:
 
 $$Charges = \beta_{0}+\beta_{1}*Age+\beta_{2}*BMI+\beta_{3}*Children$$
 
+
+
+
 ```{r q3}
+model <- lm(Charges ~ Age + BMI + Children, data = relevant_data)
+summary(model)
+
 
 ```
 
 also write out the regression cleanly in this document.
 
+$$Charges = -6639.02+277.17*Age+203.24*BMI+1006.99*Children $$
 # Question 4
 
 An eager insurance representative comes back with a potential client. The client is 40, their BMI is 30, and they have one dependent. Using the regression equation above, predict the amount of medical expenses associated with this policy. (Provide a 95% confidence interval as well)
