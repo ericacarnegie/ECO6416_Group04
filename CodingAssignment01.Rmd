@@ -122,19 +122,7 @@ hist(relevant_data$Children, breaks = "fd")
 Perform bivariate analyses on the quantitative variables (direction, strength and form). Describe the linear association between all variables. 
 
 ```{r q2}
-cor(relevant_data$Charges, relevant_data$Age)
-cor(relevant_data$Charges, relevant_data$BMI)
-cor(relevant_data$Charges, relevant_data$Children)
-cor(relevant_data$Age, relevant_data$BMI)
-cor(relevant_data$Age, relevant_data$Children)
-cor(relevant_data$BMI, relevant_data$Children)
 
-plot(relevant_data$Charges, relevant_data$Age)
-plot(relevant_data$Charges, relevant_data$BMI)
-plot(relevant_data$Charges, relevant_data$Children)
-plot(relevant_data$Age, relevant_data$BMI)
-plot(relevant_data$Age, relevant_data$Children)
-plot(relevant_data$BMI, relevant_data$Children)
 ```
 
 
