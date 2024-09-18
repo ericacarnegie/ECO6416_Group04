@@ -142,7 +142,7 @@ plot(relevant_data$BMI, relevant_data$Children)
 
 Generate a regression equation in the following form:
 
-$$Charges = \beta_{0}+\beta_{1}*Age+\beta_{2}*BMI+\beta_{3}*Children$$
+$$Charges = -6639.02+277.17*Age+203.24*BMI+1006.99*Children$$
 
 ```{r q3}
 model <- lm(Charges ~ Age + BMI + Children, data = relevant_data)
