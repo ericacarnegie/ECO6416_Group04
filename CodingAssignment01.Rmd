@@ -117,20 +117,48 @@ hist(relevant_data$Children, breaks = "fd")
 
 ```
 
+Histogram for Charges is skewed right and unimodal
+Histogram for Children is skewed right and unimodal
+Histogram for BMI is slightly skewed left and unimodal
+On average (mean), medical expenses for an insurance plan were approximately 11884 dollars. Minimal charges were 1242 dollars, while maximum charges were 47270 dollars.
+On average (mean), primary beneficiaries were an estimated 40 years of age, The youngest beneficiary was 18 years old, while the oldest was 64 years old. 
+On average (mean), the BMI for the primary beneficiaries was 30.97. Lowest BMI was listed at 17.29, while the largest was listed at 44.22. 
+On average (mean), 1 child is covered on the insurance plan. No children were covered on multiple plans, while a max of 5 children were covered on one insurance plan. 
+
+
 # Question 2
 
 Perform bivariate analyses on the quantitative variables (direction, strength and form). Describe the linear association between all variables. 
 
 ```{r q2}
+cor(relevant_data$Charges, relevant_data$Age)
+cor(relevant_data$Charges, relevant_data$BMI)
+cor(relevant_data$Charges, relevant_data$Children)
+cor(relevant_data$Age, relevant_data$BMI)
+cor(relevant_data$Age, relevant_data$Children)
+cor(relevant_data$BMI, relevant_data$Children)
 
+plot(relevant_data$Charges, relevant_data$Age)
+plot(relevant_data$Charges, relevant_data$BMI)
+plot(relevant_data$Charges, relevant_data$Children)
+plot(relevant_data$Age, relevant_data$BMI)
+plot(relevant_data$Age, relevant_data$Children)
+plot(relevant_data$BMI, relevant_data$Children)
 ```
+
+Charges and Age have a moderate positive correlation. 0.3517 shows as age increases, the charges tend to increase as well, but the relationship is not extremely strong.
+Charges and BMI have a weak positive correlation. 0.1365 shows as BMI increases, the charges increase narrowly, but the relationship has little strength.
+Charges and Children have a weak positive correlation. 0.1430 shows as the number of children increases, the charges increase narrowly, but the relationship has little strength.
+Age and BMI have a weak, almost non existent, positive correlation. 0.0553 is so weak that it’s hard to distinguish the effects of one increasing or decreasing.
+Age and Children have a weak positive correlation. 0.0822 shows that there is a slight tendency for older people to have more children.
+BMI and Children have a weak, almost non existent, positive correlation. 0.0730 is so weak that it’s hard to distinguish the effects of one increasing or decreasing.
 
 
 # Question 3
 
 Generate a regression equation in the following form:
 
-$$Charges = \beta_{0}+\beta_{1}*Age+\beta_{2}*BMI+\beta_{3}*Children$$
+$$Charges = -6639.02+277.17*Age+203.24*BMI+1006.99*Children$$
 
 ```{r q3}
 model <- lm(Charges ~ Age + BMI + Children, data = relevant_data)
@@ -138,6 +166,7 @@ summary(model)
 ```
 
 also write out the regression cleanly in this document.
+
 
 # Question 4
 
@@ -154,3 +183,5 @@ predict(model, newdata = newPrediction, interval = "confidence", level = 0.95)
 
 
 ```
+
+The regression equation predicts that the amount of medical expenses associated with the policy will be 11,552 dollars with the lower end being 9,510 dollars and upper end being 13,594 dollars using a confidence interval of 95%. Depending on the independent variables of age, BMI, and children the medical expense could vary. 
