@@ -46,11 +46,13 @@ summary(model)
 
 Which independent variables test significant in a two-tailed test? Use $\alpha = 0.2$
 
-The variables that test significant in a two-tailed test using $\alpha = 0.2$ is Age, BMI, Smoker, WinterSprings, WinterPark, and Oviedo. They are all less than 0.2 making them signifcant and we can reject the null hypothesis.
+The variables that test significant in a two-tailed test using $\alpha = 0.2$ is Age, BMI, Smoker, WinterSprings, WinterPark, and Oviedo. They are all less than 0.2, making them signifcant, so we can reject the null hypothesis.
 
 ## Question 2
 
 Interpret the coefficients of all the independent variables that tested significant.
+
+For age, each additional year older increases the charges by $286.53. For BMI,each additional kg/m2 increases the charges by $239.91. If someone is a smoker, the charges increase by $23828.07. If they live in Winter Springs, the charges will increase by $2382.96. If they live in Winter Park, the charges will increase by $2189.25. If they live in Oviedo, the charges will increase by $2054.11.
 
 
 ## Question 3
@@ -80,6 +82,9 @@ prediction<-predict(model, newdata=new_data, interval="confidence", level=0.95)
 
 print(prediction)
 ```
+
+The predicted medical expenses associated with that policy is $2,946.20.  
+There is a 95% probability that the policy will cost between $784.94 and $5107.46. 
 
 ## Question 4
 
