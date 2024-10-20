@@ -29,7 +29,7 @@ Answer the following questions using complete sentences and attach all output, p
 
 
 ```{r dataset, include=FALSE}
-insurance_data <- read.csv("~/R coding for ECO/Insurance_Data_Group4.csv", header = TRUE, sep = ",", quote = "\"", dec = ".", fill = TRUE)
+insurance_data <- read.csv("~/Documents/GitHub/ECO6416_Group04/Insurance_Data_Group4.csv", header = TRUE, sep = ",", quote = "\"", dec = ".", fill = TRUE)
 ```
 
 
@@ -46,13 +46,18 @@ summary(model)
 
 Which independent variables test significant in a two-tailed test? Use $\alpha = 0.2$
 
-The variables that test significant in a two-tailed test using $\alpha = 0.2$ is Age, BMI, Smoker, WinterSprings, WinterPark, and Oviedo. They are all less than 0.2, making them signifcant, so we can reject the null hypothesis.
+The variables that test significant in a two-tailed test using $\alpha = 0.2$ are Age, BMI, Smoker, WinterSprings, WinterPark, and Oviedo. Their p-values are all less than 0.2, allowing us to reject the null hypothesis for these variables.
 
 ## Question 2
 
 Interpret the coefficients of all the independent variables that tested significant.
 
-For age, each additional year older increases the charges by $286.53. For BMI,each additional kg/m2 increases the charges by $239.91. If someone is a smoker, the charges increase by $23828.07. If they live in Winter Springs, the charges will increase by $2382.96. If they live in Winter Park, the charges will increase by $2189.25. If they live in Oviedo, the charges will increase by $2054.11.
+For age, each additional year older increases the charges by $286.53, holding all other factors constant. 
+For BMI, each additional kg/m2 of BMI increases the charges by $239.91, holding all other factors constant.
+If a customer is a smoker, the charges increase by $23828.07, holding all other factors constant.
+If the customer lives in Winter Springs, the charges will increase by $2382.96, holding all other factors constant.
+If the customer lives in Winter Park, the charges will increase by $2189.25, holding all other factors constant. 
+If the customer lives in Oviedo, the charges will increase by $2054.11, holding all other factors constant.
 
 ## Question 3
 
@@ -80,8 +85,8 @@ prediction <- predict(model, newdata = new_data, interval = "confidence", level 
 
 print(prediction)
 ```
-The predicted medical expenses associated with that policy is $2,946.20.  
-There is a 95% probability that the policy will cost between $784.94 and $5107.46. 
+The predicted medical expenses associated with this policy are $2,946.20.  
+There is a 95% probability that medical expenses for this customer will cost between $784.94 and $5107.46. 
 
 ## Question 4
 
@@ -96,4 +101,4 @@ anova(model_reduced, model)
 
 ```
 
-Including the cities does not reduce the SSE by a statistically significant amount. According to the partial F test, the p-value turned out to be 0.2274, which does not test statistically significant when the alpha value is equal to 0.05. The p-value would have to be less than 0.05 in order for there to be a statistically significant difference. 
+Including the cities does not reduce the SSE by a statistically significant amount. The partial F-test showed a p-value of 0.2274, which did not test statistically significant against $/alpha=0.05$. So, we fail to reject the null hypothesis. In order for the cities to test statistically significant, their p-values would have to decrease significantly to get below 0.05.
