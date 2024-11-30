@@ -30,6 +30,10 @@ Answer the following questions using complete sentences and attach all output, p
 
 ```{r dataset}
 # Bring in the dataset here.
+insurance_data <- read.csv("~/Documents/GitHub/ECO6416_Group04/Insurance_Data_Group4.csv", header = TRUE, sep = ",", quote = "\"", dec = ".", fill = TRUE)
+
+insurance <- read.csv("~/Documents/GitHub/ECO6416_Group04/Insurance_Data_Group4.csv")
+
 ```
 
 
@@ -40,6 +44,17 @@ Randomly select 30 observations from the sample and exclude from all modeling. P
 
 ```{r q1}
 #
+set.seed(123)
+excluded_variables <- sample(1:nrow(insurance_data), 30)
+excluded_data <- insurance_data[excluded_variables,]
+included_data <- insurance_data[-excluded_variables,]
+
+summary_stats <- sapply(included_data[c("Charges", "Age", "BMI", "Children")], function(x) {
+c(min=min(x),
+  max=max(x),
+  mean=mean(x),
+  median=median(x),
+  stddev=sd(x))})
 ```
 
 
@@ -49,6 +64,7 @@ Provide the correlation between all quantitative variables
 
 ```{r}
 #
+cor(included_data[c("Charges", "Age", "BMI", "Children")])
 ```
 
 
@@ -56,13 +72,24 @@ Provide the correlation between all quantitative variables
 
 Run a regression that includes all independent variables in the data table. Does the model above violate any of the Gauss-Markov assumptions? If so, what are they and what is the solution for correcting?
 
+```{r}
+model <- lm(Charges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = insurance)
+sum<-summary(model)
+sum
+```
 
 ## Question 4
 
 Implement the solutions from question 3, such as data transformation, along with any other changes you wish. Use the sample data and run a new regression. How have the fit measures changed? How have the signs and significance of the coefficients changed?
 
 ```{r q4}
-#
+vif_values <- vif(model)
+
+insurance$LogCharges <- log(insurance$Charges + 1)
+
+transformed_model <- lm(LogCharges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = insurance)
+
+summary(transformed_model)
 ```
 
 ## Question 5
@@ -70,7 +97,7 @@ Implement the solutions from question 3, such as data transformation, along with
 Use the 30 withheld observations and calculate the performance measures for your best two models. Which is the better model? (remember that "better" depends on whether your outlook is short or long run)
 
 ```{r q5}
-#
+
 ```
 
 
