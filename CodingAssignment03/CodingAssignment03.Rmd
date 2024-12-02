@@ -9,7 +9,11 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-#Put any packages you need here
+library(readxl) # reading in excel file
+library(car) # for vif function
+library(plotly) # for interactive visualizations
+library(gt) # for better looking tables
+library(gtsummary) # for better summary statistics
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -45,16 +49,18 @@ Randomly select 30 observations from the sample and exclude from all modeling. P
 ```{r q1}
 #
 set.seed(123)
-excluded_variables <- sample(1:nrow(insurance_data), 30)
-excluded_data <- insurance_data[excluded_variables,]
-included_data <- insurance_data[-excluded_variables,]
+index <- sample(seq_len(nrow(insurance)), size = 30)
 
-summary_stats <- sapply(included_data[c("Charges", "Age", "BMI", "Children")], function(x) {
-c(min=min(x),
-  max=max(x),
-  mean=mean(x),
-  median=median(x),
-  stddev=sd(x))})
+train <- insurance[-index,]
+test <- insurance[index,]
+
+train %>% 
+  tbl_summary(statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median} ({p25}, {p75})",
+                                                    "{min}, {max}"),
+                              all_categorical() ~ "{n} / {N} ({p}%)"),
+              type = all_continuous() ~ "continuous2"
+  )
 ```
 
 
@@ -63,10 +69,9 @@ c(min=min(x),
 Provide the correlation between all quantitative variables
 
 ```{r}
-#
-cor(included_data[c("Charges", "Age", "BMI", "Children")])
+included_data <- train %>% select(Charges, Age, BMI, Children)
+cor(included_data)
 ```
-
 
 ## Question 3 
 
@@ -76,6 +81,8 @@ Run a regression that includes all independent variables in the data table. Does
 model <- lm(Charges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = insurance)
 sum<-summary(model)
 sum
+par(mfrow=c(2,2), mar=c(4,4,2,2))
+plot(model)
 ```
 
 ## Question 4
@@ -83,13 +90,7 @@ sum
 Implement the solutions from question 3, such as data transformation, along with any other changes you wish. Use the sample data and run a new regression. How have the fit measures changed? How have the signs and significance of the coefficients changed?
 
 ```{r q4}
-vif_values <- vif(model)
 
-insurance$LogCharges <- log(insurance$Charges + 1)
-
-transformed_model <- lm(LogCharges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = insurance)
-
-summary(transformed_model)
 ```
 
 ## Question 5
@@ -109,6 +110,7 @@ Provide interpretations of the coefficients, do the signs make sense? Perform ma
 #
 ```
 
+
 ## Question 7
 
 An eager insurance representative comes back with five potential clients. Using the better of the two models selected above, provide the prediction intervals for the five potential clients using the information provided by the insurance rep.
@@ -127,10 +129,10 @@ An eager insurance representative comes back with five potential clients. Using 
 ```
 
 ## Question 8
-
 The owner notices that some of the predictions are wider than others, explain why.
 
-## Question 9 
 
+
+## Question 9 
 Are there any prediction problems that occur with the five potential clients? If so, explain.
 
