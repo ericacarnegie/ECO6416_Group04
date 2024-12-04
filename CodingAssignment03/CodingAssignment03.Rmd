@@ -70,6 +70,7 @@ Provide the correlation between all quantitative variables
 included_data <- train %>% select(Charges, Age, BMI, Children)
 cor(included_data)
 ```
+Charges and Age have the strongest correlation out of all the variables. All of the rest of the variables (Charges & BMI, Charges & Children, Age & BMI, Age & Children, and BMI & Children) have weak positive correlation. 
 
 ## Question 3 
 
@@ -81,8 +82,10 @@ sum<-summary(model)
 sum
 par(mfrow=c(2,2), mar=c(4,4,2,2))
 plot(model)
+
+dwtest(model)
 ```
- 
+The model above violates homoscedasticity, perfect collinearity, and independence. The solution to correcting the heteroscedasticity is... The solution to correcting the multicollinearity is... The solution to correcting the autocorrelation is... 
 
 ## Question 4
 
@@ -126,6 +129,8 @@ model_5 <- lm(Charges ~ BMI + Children + Female + WinterSprings + WinterPark + O
 summary(model_5)
 #
 ```
+
+
 
 ## Question 5
 
@@ -171,7 +176,7 @@ print(mape)
 rmse <- rmse(test$Charges, test$model_2_pred)
 print(rmse)
 ```
-
+Long-term, the better model overall is Model 2. Model 2 has significantly lower MAPE and RMSE, which shows a higher level of accuracy and consistency. Both models show bias, but lower MAE, MAPE, and RMSE for Model 2 show that over time it has more accurate predictions.
 
 ## Question 6
 
@@ -196,7 +201,25 @@ An eager insurance representative comes back with five potential clients. Using 
 
 
 ```{r}
-#
+new_clients <- data.frame(
+  Age = c(60, 40, 25, 33, 45),
+  BMI = c(22, 30, 25, 35, 27),
+  Female = c(1, 0, 0, 1, 1),
+  Children = c(0, 1, 0, 2, 3),
+  Smoker = c(0, 0, 1, 0, 0),
+  City = c("Oviedo", "Sanford", "Winter Park", "Winter Springs", "Oviedo")
+)
+
+new_clients$LogAge <- log(new_clients$Age)
+new_clients$SmokerSquared <- new_clients$Smoker^2
+new_clients$LogCharges
+
+new_clients$model_2_pred <- predict(model_2, newdata = new_clients)
+
+new_clients$lower_PI <- new_clients$model_2_pred - 1.96 * sd(new_clients$model_2_pred)
+new_clients$upper_PI <- new_clients$model_2_pred + 1.96 * sd(new_clients$model_2_pred)
+
+print(new_clients)
 ```
 
 ## Question 8
