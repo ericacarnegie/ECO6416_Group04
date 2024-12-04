@@ -34,7 +34,7 @@ Answer the following questions using complete sentences and attach all output, p
 
 ```{r dataset}
 # Bring in the dataset here.
-insurance_data <- read.csv("~/Documents/GitHub/ECO6416_Group04/Insurance_Data_Group4.csv", header = TRUE, sep = ",", quote = "\"", dec = ".", fill = TRUE)
+#insurance_data <- read.csv("~/Documents/GitHub/ECO6416_Group04/Insurance_Data_Group4.csv"
 
 insurance <- read.csv("~/Documents/GitHub/ECO6416_Group04/Insurance_Data_Group4.csv")
 
@@ -49,7 +49,6 @@ Randomly select 30 observations from the sample and exclude from all modeling. P
 #
 set.seed(123)
 index <- sample(seq_len(nrow(insurance)), size = 30)
-
 train <- insurance[-index,]
 test <- insurance[index,]
 
@@ -95,7 +94,7 @@ train$LogCharges <- log(train$Charges)
 train$ChargesSquared <- train$Charges^2
 
 # Log Age and Age Squared 
-train$lnAge <- log(train$Age)
+train$LogAge <- log(train$Age)
 train$AgeSquared <- train$Age^2
 
 # Log Smoker and Smoker Squares 
@@ -107,11 +106,11 @@ train$LogBMI <- log(train$BMI)
 train$BMISquared <- train$BMI^2
 
 # Interaction: Children and Age
-model_1 <- lm(LogCharges ~lnAge + Children, data = train)
+model_1 <- lm(LogCharges ~LogAge + Children, data = train)
 summary(model_1)
 
 # Interaction: Smoker and Female
-model_2 <- lm(LogCharges ~train$SmokerSquared + Female, data = train)
+model_2 <- lm(LogCharges ~ SmokerSquared + Female, data = train)
 summary(model_2)
 
 # Interaction: BMI and Oviedo
@@ -134,25 +133,19 @@ Use the 30 withheld observations and calculate the performance measures for your
 
 ```{r q5}
 test$LogCharges <- log(test$Charges)
+test$LogAge <- log(test$Age)
+test$SmokerSquared <- test$Smoker^2
 
-test$model_1_pred <- predict(model_1, newdata=test) %>% exp ()
-test$model_2_pred <- predict(model_2, newdata=test) %>% exp ()
+test$model_1_pred <- predict(model_1, newdata= test) %>% exp ()
+test$model_2_pred <- predict(model_2, newdata= test) %>% exp ()
 
 test$error_1 <- test$model_1_pred - test$Charges
 test$error_2 <- test$model_2_pred - test$Charges
 
-mae <- function(error_vector){
-  error_vector %>% 
-  abs() %>% 
-  mean()
-}
+mae <- function(error_vector){error_vector %>%  abs() %>%  mean()}
 
 rmse <- function(error_vector){
-   error_vector^2 %>% 
-  mean() %>% 
-  sqrt()
-
-}
+   error_vector^2 %>%  mean() %>% sqrt()}
 
 mape <- function(error_vector, actual_vector){
   (error_vector/actual_vector) %>% 
@@ -160,6 +153,23 @@ mape <- function(error_vector, actual_vector){
     mean()
 }
 
+bias <- mean(test$error_1)
+print(bias)
+mae <- mae(test$error_1)
+print(mae)
+mape <- mape(test$error_1, test$Charges)
+print(mape)
+rmse <- rmse(test$error_1)
+print(rmse)
+
+bias <- mean(test$error_2)
+print(bias)
+mae <- mae(test$Charges, test$model_2_pred)
+print(mae)
+mape <- mape(test$error_2, test$Charges)
+print(mape)
+rmse <- rmse(test$Charges, test$model_2_pred)
+print(rmse)
 ```
 
 
