@@ -85,7 +85,7 @@ plot(model)
 
 dwtest(model)
 ```
-The model above violates homoscedasticity, perfect collinearity, and independence. The solution to correcting the heteroscedasticity is... The solution to correcting the multicollinearity is... The solution to correcting the autocorrelation is... 
+The model above violates homoscedasticity, perfect collinearity, and independence. The solution to correcting the heteroscedasticity is using different weightings in least squares. The solution to correcting the multicollinearity is by checking tthe VIF and removing or combining explanatory variables. The solution to correcting the autocorrelation is adding lag variables to see if there's a difference over time periods. 
 
 ## Question 4
 
@@ -130,7 +130,7 @@ summary(model_5)
 #
 ```
 
-
+Models 1 and 2 have an improved fit in comparison to the original regression. 
 
 ## Question 5
 
@@ -159,21 +159,29 @@ mape <- function(error_vector, actual_vector){
 }
 
 bias <- mean(test$error_1)
+print("Mean for Model 1")
 print(bias)
 mae <- mae(test$error_1)
+print("MAE for Model 1")
 print(mae)
 mape <- mape(test$error_1, test$Charges)
+print("MAPE for Model 1")
 print(mape)
 rmse <- rmse(test$error_1)
+print("RMSE for Model 1")
 print(rmse)
 
 bias <- mean(test$error_2)
+print("Mean for Model 2")
 print(bias)
 mae <- mae(test$Charges, test$model_2_pred)
+print("MAE for Model 2")
 print(mae)
 mape <- mape(test$error_2, test$Charges)
+print("MAPE for Model 2")
 print(mape)
 rmse <- rmse(test$Charges, test$model_2_pred)
+print("RMSE for Model 2")
 print(rmse)
 ```
 Long-term, the better model overall is Model 2. Model 2 has significantly lower MAPE and RMSE, which shows a higher level of accuracy and consistency. Both models show bias, but lower MAE, MAPE, and RMSE for Model 2 show that over time it has more accurate predictions.
@@ -183,7 +191,25 @@ Long-term, the better model overall is Model 2. Model 2 has significantly lower 
 Provide interpretations of the coefficients, do the signs make sense? Perform marginal change analysis (thing 2) on the independent variables.
 
 ```{r}
+coef_model1 <- c(Intercept = 4.42138, LogAge = 1.26023, Children = 0.08646)
 
+marginal_change_model1 <- list(
+  LogAge = (exp(coef_model1["LogAge"]) - 1) * 100,   # Percent change for LogAge
+  Children = (exp(coef_model1["Children"]) - 1) * 100  # Percent change for Children
+)
+
+print("Marginal Change Analysis for Model 1:")
+print(marginal_change_model1)
+
+coef_model2 <- c(Intercept = 8.74332, SmokerSquared = 1.55813, Female = 0.06303)
+
+marginal_change_model2 <- list(
+  SmokerSquared = (exp(coef_model2["SmokerSquared"]) - 1) * 100,  # Percent change for SmokerSquared
+  Female = (exp(coef_model2["Female"]) - 1) * 100  # Percent change for Female
+)
+
+print("Marginal Change Analysis for Model 2:")
+print(marginal_change_model2)
 ```
 
 
@@ -222,11 +248,13 @@ new_clients$upper_PI <- new_clients$model_2_pred + 1.96 * sd(new_clients$model_2
 print(new_clients)
 ```
 
+
 ## Question 8
 The owner notices that some of the predictions are wider than others, explain why.
 
-
+Some of the predictions are wider than others because customers whose features (Age, BMI, etc.) that are farther from the average data in the training set will have wider prediction intervals due to higher uncertainty in the model’s predictions. On the other hand, predictions that are more typical of the training data will have narrower intervals because the model can predict these values with greater confidence.
 
 ## Question 9 
 Are there any prediction problems that occur with the five potential clients? If so, explain.
 
+Yes, a couple of the prediction problems that could occur are multicollinearity because Age and BMI are highly correlated, as older individuals may be more likely to have higher BMI. Since these variables are highly correlated, the model may have difficulty isolating their individual effects on the dependent variable. Another prediction problem could be outliers like age for customer one or BMI for customer 4. If the model hasn't learned how to predict for such outliers, it could result in poor predictions for this customer.
