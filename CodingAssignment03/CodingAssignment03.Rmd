@@ -77,9 +77,10 @@ Charges and Age have the strongest correlation out of all the variables. All of 
 Run a regression that includes all independent variables in the data table. Does the model above violate any of the Gauss-Markov assumptions? If so, what are they and what is the solution for correcting?
 
 ```{r}
-model <- lm(Charges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = insurance)
+model <- lm(Charges ~ Age + BMI + Children + Female + Smoker + WinterSprings + WinterPark + Oviedo, data = train)
 sum<-summary(model)
-sum
+scatterplotMatrix(train%>%select(Age, BMI, Children, Charges))
+
 par(mfrow=c(2,2), mar=c(4,4,2,2))
 plot(model)
 
@@ -130,7 +131,7 @@ summary(model_5)
 #
 ```
 
-Models 1 and 2 have an improved fit in comparison to the original regression. 
+ 
 
 ## Question 5
 
@@ -191,27 +192,19 @@ Long-term, the better model overall is Model 2. Model 2 has significantly lower 
 Provide interpretations of the coefficients, do the signs make sense? Perform marginal change analysis (thing 2) on the independent variables.
 
 ```{r}
-coef_model1 <- c(Intercept = 4.42138, LogAge = 1.26023, Children = 0.08646)
+coefficients <- coef(model_1)
+print(coefficients)
 
-marginal_change_model1 <- list(
-  LogAge = (exp(coef_model1["LogAge"]) - 1) * 100,   # Percent change for LogAge
-  Children = (exp(coef_model1["Children"]) - 1) * 100  # Percent change for Children
-)
-
-print("Marginal Change Analysis for Model 1:")
-print(marginal_change_model1)
-
-coef_model2 <- c(Intercept = 8.74332, SmokerSquared = 1.55813, Female = 0.06303)
-
-marginal_change_model2 <- list(
-  SmokerSquared = (exp(coef_model2["SmokerSquared"]) - 1) * 100,  # Percent change for SmokerSquared
-  Female = (exp(coef_model2["Female"]) - 1) * 100  # Percent change for Female
-)
-
-print("Marginal Change Analysis for Model 2:")
-print(marginal_change_model2)
+beta_Children <- coefficients["Children"]
+marginal_changeChildren <- beta_Children 
+beta_Age <- coefficients["LogAge"]
+marginal_changeAge <- beta_Age 
+print(paste("Marginal Change for Log Age", marginal_changeAge))
+print(paste("Marginal Change for Children", marginal_changeChildren))
 ```
+LogAge shows that for every increase in 1 unit, the log charges will increase by 1.26 units. There is a significant relationship between age and charges in the log transformation. The sign on this makes sense because as age increases, healthcare costs will typically increase because they are at higher risk of health-related problems. 
 
+Children shows that for every additional child, charges will increase by 0.086 units. There is a small positive relationship between the number of children and charges. The sign on this makes sense because larger families will have higher healthcare costs. 
 
 ## Question 7
 
