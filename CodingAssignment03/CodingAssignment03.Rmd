@@ -84,6 +84,7 @@ scatterplotMatrix(train%>%select(Age, BMI, Children, Charges))
 par(mfrow=c(2,2), mar=c(4,4,2,2))
 plot(model)
 
+library(lmtest)
 dwtest(model)
 ```
 The model above violates homoscedasticity, perfect collinearity, and independence. The solution to correcting the heteroscedasticity is using different weightings in least squares. The solution to correcting the multicollinearity is by checking tthe VIF and removing or combining explanatory variables. The solution to correcting the autocorrelation is adding lag variables to see if there's a difference over time periods. 
@@ -131,7 +132,7 @@ summary(model_5)
 #
 ```
 
- 
+Both Model 1 and 2 have improved fit, but Model 2 has the better fit out of the two because it has more variance. Model 2 uses SmokerSquared which has high significance, meaning it plays an important role in the data. Model 1 uses LogAge, which also has high significance, but Children is not significant. Both models have positive signs, showing that smoking and age increase charges on a more significant scale than being female or having children. 
 
 ## Question 5
 
@@ -148,6 +149,7 @@ test$model_2_pred <- predict(model_2, newdata= test) %>% exp ()
 test$error_1 <- test$model_1_pred - test$Charges
 test$error_2 <- test$model_2_pred - test$Charges
 
+library(Metrics)
 mae <- function(error_vector){error_vector %>%  abs() %>%  mean()}
 
 rmse <- function(error_vector){
@@ -202,7 +204,7 @@ marginal_changeAge <- beta_Age
 print(paste("Marginal Change for Log Age", marginal_changeAge))
 print(paste("Marginal Change for Children", marginal_changeChildren))
 ```
-LogAge shows that for every increase in 1 unit, the log charges will increase by 1.26 units. There is a significant relationship between age and charges in the log transformation. The sign on this makes sense because as age increases, healthcare costs will typically increase because they are at higher risk of health-related problems. 
+LogAge shows that for every 1% increase, the log charges will increase by 1.26% units. There is a significant relationship between age and charges in the log transformation. The sign on this makes sense because as age increases, healthcare costs will typically increase because they are at higher risk of health-related problems. 
 
 Children shows that for every additional child, charges will increase by 0.086 units. There is a small positive relationship between the number of children and charges. The sign on this makes sense because larger families will have higher healthcare costs. 
 
